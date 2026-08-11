@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Staff Login — Freshers' ZENITH{% endblock %}
+
+{% block content %}
+<div class="page-container centered">
+    <div class="glass-card login-card">
+        <div class="card-icon">🔐</div>
+        <h1>Staff Login</h1>
+        <p class="card-subtitle">Freshers' ZENITH Check-in System</p>
+
+        <form method="POST" action="{{ url_for('login') }}" class="login-form">
+            <div class="form-group">
+                <label for="password">Staff Password</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter staff password"
+                    required
+                    autofocus
+                    autocomplete="current-password"
+                >
+            </div>
+            <button type="submit" class="btn btn-primary btn-full" id="loginBtn">
+                Login →
+            </button>
+        </form>
+
+        <p class="login-hint">Volunteers only. Contact organizers for the password.</p>
+    </div>
+</div>
+{% endblock %}

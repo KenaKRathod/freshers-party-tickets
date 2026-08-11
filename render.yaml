@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: freshers-zenith
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    plan: free
+    envVars:
+      - key: STAFF_PASSWORD
+        sync: false
+      - key: BASE_URL
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.12.3

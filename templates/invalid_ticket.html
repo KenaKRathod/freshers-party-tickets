@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Invalid Ticket — Freshers' ZENITH{% endblock %}
+
+{% block content %}
+<div class="page-container centered">
+    <div class="glass-card ticket-card invalid-ticket">
+        <div class="card-icon">❌</div>
+        <h1>Invalid Ticket</h1>
+        <p class="error-text">This QR code does not match any valid ticket in our system.</p>
+
+        <div class="error-suggestions">
+            <p>Possible reasons:</p>
+            <ul>
+                <li>The QR code is damaged or unreadable</li>
+                <li>This ticket was not issued officially</li>
+                <li>The link was modified or incomplete</li>
+            </ul>
+        </div>
+
+        <p class="error-hint">If you believe this is an error, please contact the event organizers.</p>
+    </div>
+</div>
+{% endblock %}

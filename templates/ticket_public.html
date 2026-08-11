@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}🎉 Your Ticket — Freshers' ZENITH{% endblock %}
+
+{% block content %}
+<div class="page-container centered">
+    <!-- Confetti canvas -->
+    <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+    <div class="glass-card ticket-card public-ticket">
+        <div class="ticket-emoji">🎉</div>
+        <h1>Welcome to</h1>
+        <h2 class="event-title">Freshers' ZENITH</h2>
+        <p class="event-tagline">Dream · Connect · Celebrate</p>
+
+        <div class="ticket-divider"></div>
+
+        <div class="ticket-details">
+            <div class="detail-item">
+                <span class="detail-icon">📅</span>
+                <span>19 September 2026, Saturday</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-icon">🕐</span>
+                <span>10:00 AM Onwards</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-icon">📍</span>
+                <span>Merriment Banquet, Near VGEC Metro</span>
+            </div>
+        </div>
+
+        <div class="ticket-divider"></div>
+
+        <p class="ticket-number">Ticket #{{ ticket.id }}</p>
+        <p class="ticket-footer">Present this QR code at the entry gate</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+    const canvas = document.getElementById('confettiCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W, H;
+
+    function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const colors = ['#ffd700', '#9b59b6', '#3498db', '#e74c3c', '#2ecc71', '#ff6b6b', '#f39c12'];
+    const pieces = [];
+    const TOTAL = 60;
+
+    for (let i = 0; i < TOTAL; i++) {
+        pieces.push({
+            x: Math.random() * W,
+            y: Math.random() * H - H,
+            w: 6 + Math.random() * 8,
+            h: 4 + Math.random() * 6,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            vy: 1.5 + Math.random() * 3,
+            vx: (Math.random() - 0.5) * 2,
+            rot: Math.random() * 360,
+            rv: (Math.random() - 0.5) * 6,
+            opacity: 0.7 + Math.random() * 0.3
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, W, H);
+        pieces.forEach(p => {
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rot * Math.PI) / 180);
+            ctx.globalAlpha = p.opacity;
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            ctx.restore();
+
+            p.y += p.vy;
+            p.x += p.vx;
+            p.rot += p.rv;
+
+            if (p.y > H + 20) {
+                p.y = -20;
+                p.x = Math.random() * W;
+            }
+        });
+        requestAnimationFrame(draw);
+    }
+    draw();
+})();
+</script>
+{% endblock %}

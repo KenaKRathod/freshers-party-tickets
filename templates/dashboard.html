@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard — Freshers' ZENITH{% endblock %}
+
+{% block content %}
+<div class="page-container">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Freshers' ZENITH</h1>
+            <p class="dashboard-subtitle">Live Check-in Dashboard</p>
+        </div>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline btn-sm" id="logoutBtn">Logout</a>
+    </div>
+
+    <!-- Stats cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-number">{{ stats.total }}</span>
+            <span class="stat-label">Total Tickets</span>
+        </div>
+        <div class="stat-card stat-checked">
+            <span class="stat-number">{{ stats.checked_in }}</span>
+            <span class="stat-label">Checked In</span>
+        </div>
+        <div class="stat-card stat-remaining">
+            <span class="stat-number">{{ stats.remaining }}</span>
+            <span class="stat-label">Remaining</span>
+        </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-section">
+        {% set pct = (stats.checked_in / stats.total * 100) if stats.total > 0 else 0 %}
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ pct | round(1) }}%"></div>
+        </div>
+        <p class="progress-text">{{ pct | round(1) }}% checked in</p>
+    </div>
+
+    <!-- Ticket table -->
+    <div class="glass-card dashboard-table-card">
+        <div class="table-header">
+            <h2>All Tickets</h2>
+            <input
+                type="text"
+                id="searchInput"
+                class="search-input"
+                placeholder="Search by # or status…"
+                autocomplete="off"
+            >
+        </div>
+
+        <div class="table-container">
+            <table id="ticketsTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Token</th>
+                        <th>Status</th>
+                        <th>Checked In At</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for t in tickets %}
+                    <tr class="{{ 'checked-row' if t.checked_in else '' }}">
+                        <td>{{ t.id }}</td>
+                        <td>
+                            <a href="{{ url_for('ticket', token=t.token) }}" class="token-link">
+                                {{ t.token[:10] }}…
+                            </a>
+                        </td>
+                        <td>
+                            {% if t.checked_in %}
+                                <span class="badge badge-success">✅ In</span>
+                            {% else %}
+                                <span class="badge badge-pending">⏳ Pending</span>
+                            {% endif %}
+                        </td>
+                        <td class="time-cell">{{ t.checked_in_at or '—' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Live search / filter
+document.getElementById('searchInput').addEventListener('input', function () {
+    const q = this.value.toLowerCase();
+    document.querySelectorAll('#ticketsTable tbody tr').forEach(function (row) {
+        row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+});
+
+// Auto-refresh every 15 seconds to keep stats live during the event
+setTimeout(function () { location.reload(); }, 15000);
+</script>
+{% endblock %}

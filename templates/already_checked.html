@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}⚠️ Already Checked In · Ticket #{{ ticket.id }}{% endblock %}
+
+{% block content %}
+<div class="page-container centered">
+    <div class="glass-card ticket-card already-checked">
+        <div class="card-icon warning-icon">⚠️</div>
+        <h1>Already Checked In</h1>
+
+        <div class="ticket-info">
+            <div class="info-row">
+                <span class="info-label">Ticket #</span>
+                <span class="info-value">#{{ ticket.id }}</span>
+            </div>
+            {% if ticket.name %}
+            <div class="info-row">
+                <span class="info-label">Name</span>
+                <span class="info-value">{{ ticket.name }}</span>
+            </div>
+            {% endif %}
+            <div class="info-row">
+                <span class="info-label">Checked In At</span>
+                <span class="info-value status-checked">{{ ticket.checked_in_at }}</span>
+            </div>
+        </div>
+
+        <div class="alert alert-warning">
+            <strong>⛔ Do not allow re-entry.</strong><br>
+            This ticket has already been used.
+        </div>
+
+        <a href="{{ url_for('dashboard') }}" class="back-link">← Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}
