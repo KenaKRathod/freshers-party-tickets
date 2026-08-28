@@ -4,7 +4,7 @@ from flask import (
 )
 
 from config import Config
-from database import init_db, get_ticket_by_token, check_in_ticket, get_stats, get_all_tickets
+from database import init_db, get_ticket_by_token, check_in_ticket, undo_check_in, get_stats, get_all_tickets
 
 # ---------------------------------------------------------------------------
 # App setup
@@ -101,6 +101,23 @@ def checkin(token):
 
     if not t['checked_in']:
         check_in_ticket(token)
+
+    return redirect(url_for('ticket', token=token))
+
+
+@app.route('/undo-checkin/<token>', methods=['POST'])
+def undo_checkin(token):
+    """Undo a check-in — staff only, POST only."""
+    if not is_staff():
+        abort(403)
+
+    t = get_ticket_by_token(token)
+    if not t:
+        abort(404)
+
+    if t['checked_in']:
+        undo_check_in(token)
+        flash('Check-in undone successfully.', 'success')
 
     return redirect(url_for('ticket', token=token))
 

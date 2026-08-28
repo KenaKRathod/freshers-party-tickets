@@ -16,7 +16,6 @@ import os
 import sys
 import argparse
 import secrets
-import sqlite3
 from glob import glob
 
 import qrcode
@@ -58,7 +57,7 @@ def generate_tokens(count=None):
         try:
             conn.execute('INSERT INTO tickets (token) VALUES (?)', (token,))
             generated += 1
-        except sqlite3.IntegrityError:
+        except Exception:
             continue                                 # duplicate -- retry
 
     conn.commit()

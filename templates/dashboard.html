@@ -59,6 +59,7 @@
                         <th>Token</th>
                         <th>Status</th>
                         <th>Checked In At</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -78,6 +79,16 @@
                             {% endif %}
                         </td>
                         <td class="time-cell">{{ t.checked_in_at or '—' }}</td>
+                        <td>
+                            {% if t.checked_in %}
+                            <form action="{{ url_for('undo_checkin', token=t.token) }}" method="POST" style="display:inline;"
+                                  onsubmit="return confirm('Undo check-in for ticket #{{ t.id }}?');">
+                                <button type="submit" style="background: #f59e0b; color: #000; border: none; border-radius: 4px; padding: 0.25rem 0.5rem; cursor: pointer; font-size: 0.75rem; font-weight: 600;">↩️ Undo</button>
+                            </form>
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
