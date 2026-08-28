@@ -29,8 +29,8 @@ from database import init_db, get_db
 # ============================================================================
 #  QR PLACEMENT CONFIG -- adjust these to match your pass template
 # ============================================================================
-QR_SIZE = (160, 160)        # Width x height of the QR code on the pass (px)
-QR_POSITION = (1320, 520)    # Top-left corner (x, y) where QR is pasted
+QR_SIZE = (230, 230)        # Width x height of the QR code on the pass (px)
+QR_POSITION = (1295, 260)    # Top-left corner (x, y) where QR is pasted
 # ============================================================================
 
 
