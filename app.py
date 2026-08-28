@@ -12,8 +12,15 @@ from database import init_db, get_ticket_by_token, check_in_ticket, undo_check_i
 app = Flask(__name__)
 app.secret_key = Config.SECRET_KEY
 
-# Ensure database exists on startup
-init_db()
+# Ensure database exists on first request (not at import time)
+_db_initialized = False
+
+@app.before_request
+def ensure_db():
+    global _db_initialized
+    if not _db_initialized:
+        init_db()
+        _db_initialized = True
 
 
 # ---------------------------------------------------------------------------
