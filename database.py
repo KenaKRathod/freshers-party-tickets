@@ -1,6 +1,9 @@
 import os
 import sqlite3
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
+
+# IST is UTC+5:30 — ensures correct timestamps regardless of server timezone
+IST = timezone(timedelta(hours=5, minutes=30))
 
 from config import Config
 
@@ -10,7 +13,11 @@ from config import Config
 _USE_TURSO = bool(Config.TURSO_DATABASE_URL and Config.TURSO_AUTH_TOKEN)
 
 if _USE_TURSO:
-    import libsql_experimental as libsql
+    try:
+        import libsql_experimental as libsql
+    except ImportError:
+        _USE_TURSO = False
+        print("  [INFO] libsql_experimental not installed — using local SQLite")
 
 
 def get_db():
@@ -75,7 +82,7 @@ def check_in_ticket(token):
     """Mark a ticket as checked in with the current timestamp."""
     conn = get_db()
     try:
-        now = datetime.now().strftime('%Y-%m-%d %I:%M:%S %p')
+        now = datetime.now(IST).strftime('%Y-%m-%d %I:%M:%S %p')
         conn.execute(
             'UPDATE tickets SET checked_in = 1, checked_in_at = ? WHERE token = ? AND checked_in = 0',
             (now, token)
